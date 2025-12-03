@@ -1,0 +1,60 @@
+/*
+Theme Name: Green Burials
+Author: Windsurf AI
+Version: 1.0
+Description: Custom pixel-perfect theme for Green Burials site - Eco-friendly burial products with extreme speed optimization
+Text Domain: green-burials
+*/
+
+/* CSS Reset & Base Styles */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}html{font-size:16px;-webkit-text-size-adjust:100%}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;line-height:1.6;color:#333;background:#fff;overflow-x:hidden}img{max-width:100%;height:auto;display:block}a{text-decoration:none;color:inherit}ul,ol{list-style:none}button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* Variables */
+:root{--primary-green:#6B8E23;--dark-green:#5A7A1F;--light-green:#8BA446;--text-dark:#333;--text-light:#666;--bg-white:#fff;--bg-light:#f9f9f9;--border-color:#e0e0e0;--max-width:1200px;--spacing-xs:.5rem;--spacing-sm:1rem;--spacing-md:2rem;--spacing-lg:3rem;--spacing-xl:4rem}
+
+/* Typography */
+h1,h2,h3,h4,h5,h6{font-weight:700;line-height:1.2;margin-bottom:1rem}h1{font-size:3rem}h2{font-size:2.25rem}h3{font-size:1.75rem}h4{font-size:1.5rem}p{margin-bottom:1rem}
+
+/* Container */
+.container{max-width:var(--max-width);margin:0 auto;padding:0 1.5rem}
+
+/* Header */
+.site-header{background:var(--primary-green);color:#fff;position:sticky;top:0;z-index:1000;box-shadow:0 2px 8px rgba(0,0,0,.1)}.header-top{display:flex;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid rgba(255,255,255,.2)}.header-top .container{display:flex;align-items:center;justify-content:space-between;width:100%}.site-branding{display:flex;align-items:center;gap:.75rem}.site-logo{width:40px;height:40px;fill:#fff}.site-title{font-size:1.5rem;font-weight:700;margin:0}.header-icons{display:flex;gap:1.5rem;align-items:center}.header-icon{width:24px;height:24px;fill:#fff;transition:opacity .3s}.header-icon:hover{opacity:.8}.main-navigation{background:var(--dark-green)}.main-navigation .container{display:flex;justify-content:center}.nav-menu{display:flex;gap:2.5rem;padding:1rem 0}.nav-menu a{color:#fff;font-weight:600;font-size:.95rem;text-transform:uppercase;letter-spacing:.5px;transition:opacity .3s;position:relative}.nav-menu a:hover{opacity:.8}.nav-menu a::after{content:'';position:absolute;bottom:-8px;left:0;width:0;height:2px;background:#fff;transition:width .3s}.nav-menu a:hover::after{width:100%}
+
+/* Hero Section */
+.hero-section{padding:var(--spacing-xl) 0;background:#fff}.hero-content{display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-lg);align-items:center}.hero-text h1{font-size:3.5rem;color:var(--primary-green);margin-bottom:1rem;letter-spacing:2px}.hero-text .subtitle{font-size:1.5rem;color:var(--text-light);margin-bottom:var(--spacing-md)}.btn-primary{background:var(--primary-green);color:#fff;padding:1rem 2.5rem;font-size:1.1rem;font-weight:600;border-radius:4px;display:inline-block;transition:background .3s}.btn-primary:hover{background:var(--dark-green)}.hero-images{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem;position:relative}.hero-images img{border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);width:100%;object-fit:cover;height:200px}
+
+/* Info Boxes */
+.info-boxes{background:var(--bg-light);padding:var(--spacing-md) 0}.info-boxes .container{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-md)}.info-box{text-align:center;padding:var(--spacing-md)}.info-box-icon{width:48px;height:48px;margin:0 auto 1rem;fill:var(--primary-green)}.info-box h3{font-size:1.1rem;margin-bottom:.5rem}.info-box p{color:var(--text-light);font-size:.95rem}
+
+/* Green Burials Section */
+.green-burials-section{padding:var(--spacing-xl) 0}.green-burials-content{display:grid;grid-template-columns:1fr 2fr 1fr;gap:var(--spacing-md);align-items:center}.green-burials-text{text-align:center;padding:0 var(--spacing-md)}.green-burials-text h2{color:var(--primary-green);margin-bottom:var(--spacing-md)}.green-burials-text p{color:var(--text-dark);line-height:1.8;margin-bottom:1rem}.green-burials-images img{border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.1);width:100%;height:300px;object-fit:cover}
+
+/* Product Sections */
+.product-section{padding:var(--spacing-xl) 0}.product-section h2{text-align:center;color:var(--primary-green);margin-bottom:var(--spacing-md)}.category-list{display:flex;justify-content:center;gap:var(--spacing-md);flex-wrap:wrap;margin-bottom:var(--spacing-lg)}.category-item{color:var(--text-dark);font-weight:600;padding:.5rem 1rem;border-bottom:2px solid transparent;transition:all .3s}.category-item:hover,.category-item.active{color:var(--primary-green);border-bottom-color:var(--primary-green)}.products-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--spacing-md)}.product-card{background:#fff;border:1px solid var(--border-color);border-radius:8px;overflow:hidden;transition:transform .3s,box-shadow .3s}.product-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.1)}.product-image{position:relative;overflow:hidden;height:250px}.product-image img{width:100%;height:100%;object-fit:cover;transition:transform .3s}.product-card:hover .product-image img{transform:scale(1.05)}.product-badge{position:absolute;top:10px;right:10px;background:var(--primary-green);color:#fff;padding:.25rem .75rem;border-radius:20px;font-size:.85rem;font-weight:600}.product-info{padding:1.25rem}.product-title{font-size:1.1rem;margin-bottom:.5rem;color:var(--text-dark)}.product-price{font-size:1.25rem;font-weight:700;color:var(--primary-green);margin-bottom:1rem}.product-price del{color:var(--text-light);font-size:1rem;margin-left:.5rem}.btn-shop{background:var(--primary-green);color:#fff;padding:.75rem 1.5rem;font-weight:600;border-radius:4px;display:block;text-align:center;transition:background .3s}.btn-shop:hover{background:var(--dark-green)}
+
+/* Banner Section */
+.banner-section{background:var(--primary-green);color:#fff;padding:var(--spacing-lg) 0;text-align:center}.banner-section h2{font-size:1.75rem;line-height:1.6;max-width:900px;margin:0 auto}
+
+/* Dual Banners */
+.dual-banners{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--spacing-md);padding:var(--spacing-xl) 0}.banner-card{position:relative;height:400px;border-radius:8px;overflow:hidden}.banner-card img{width:100%;height:100%;object-fit:cover}.banner-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.6),transparent);display:flex;flex-direction:column;justify-content:flex-end;padding:var(--spacing-md);color:#fff}.banner-overlay h3{font-size:2rem;margin-bottom:1rem}.banner-overlay .btn-primary{background:#fff;color:var(--primary-green)}
+
+/* Reviews Section */
+.reviews-section{padding:var(--spacing-xl) 0;background:var(--bg-light)}.reviews-section h2{text-align:center;color:var(--primary-green);margin-bottom:var(--spacing-lg)}.review-card{max-width:800px;margin:0 auto;background:#fff;padding:var(--spacing-lg);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.05)}.review-stars{display:flex;gap:.25rem;margin-bottom:1rem;justify-content:center}.review-stars svg{width:24px;height:24px;fill:#FFD700}.review-text{font-size:1.1rem;line-height:1.8;color:var(--text-dark);text-align:center;margin-bottom:1rem}.review-author{text-align:center;color:var(--text-light);font-style:italic}
+
+/* Blog Section */
+.blog-section{padding:var(--spacing-xl) 0}.blog-section h2{text-align:center;color:var(--primary-green);margin-bottom:var(--spacing-lg)}.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--spacing-md)}.blog-card{background:#fff;border:1px solid var(--border-color);border-radius:8px;overflow:hidden;transition:transform .3s,box-shadow .3s}.blog-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.1)}.blog-image{height:200px;overflow:hidden}.blog-image img{width:100%;height:100%;object-fit:cover;transition:transform .3s}.blog-card:hover .blog-image img{transform:scale(1.05)}.blog-content{padding:1.5rem}.blog-title{font-size:1.25rem;margin-bottom:1rem;color:var(--text-dark)}.blog-excerpt{color:var(--text-light);margin-bottom:1rem;line-height:1.6}.btn-learn-more{color:var(--primary-green);font-weight:600;display:inline-flex;align-items:center;gap:.5rem;transition:gap .3s}.btn-learn-more:hover{gap:1rem}
+
+/* Newsletter Section */
+.newsletter-section{padding:var(--spacing-xl) 0;background:var(--bg-light)}.newsletter-content{display:grid;grid-template-columns:1fr 1fr;gap:var(--spacing-lg);align-items:center}.newsletter-form{background:#fff;padding:var(--spacing-lg);border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,.05)}.newsletter-form h2{color:var(--primary-green);margin-bottom:var(--spacing-md)}.newsletter-form form{display:flex;gap:1rem}.newsletter-form input[type="email"]{flex:1;padding:1rem;border:1px solid var(--border-color);border-radius:4px;font-size:1rem}.newsletter-form button{background:var(--primary-green);color:#fff;padding:1rem 2rem;border-radius:4px;font-weight:600;transition:background .3s}.newsletter-form button:hover{background:var(--dark-green)}.newsletter-map{height:400px;border-radius:8px;overflow:hidden}.newsletter-map iframe{width:100%;height:100%;border:0}
+
+/* Footer */
+.site-footer{background:var(--primary-green);color:#fff;padding:var(--spacing-xl) 0 var(--spacing-md)}.footer-content{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--spacing-lg);margin-bottom:var(--spacing-lg)}.footer-column h3{font-size:1.25rem;margin-bottom:1rem}.footer-column ul li{margin-bottom:.75rem}.footer-column a{color:#fff;opacity:.9;transition:opacity .3s}.footer-column a:hover{opacity:1}.footer-logo{display:flex;align-items:center;gap:.5rem;margin-bottom:1rem}.footer-logo svg{width:32px;height:32px;fill:#fff}.payment-icons{display:flex;gap:.75rem;margin-top:1rem}.payment-icons img{height:24px;width:auto}.footer-bottom{border-top:1px solid rgba(255,255,255,.2);padding-top:var(--spacing-md);text-align:center;font-size:.9rem;opacity:.9}
+
+/* Responsive Design */
+@media(max-width:1024px){.hero-content,.green-burials-content,.newsletter-content{grid-template-columns:1fr}.products-grid{grid-template-columns:repeat(3,1fr)}.blog-grid{grid-template-columns:repeat(2,1fr)}.footer-content{grid-template-columns:repeat(2,1fr)}}
+
+@media(max-width:768px){h1{font-size:2.5rem}.hero-text h1{font-size:2.5rem}.hero-text .subtitle{font-size:1.25rem}.nav-menu{flex-direction:column;gap:1rem}.info-boxes .container,.products-grid,.blog-grid,.dual-banners{grid-template-columns:1fr}.footer-content{grid-template-columns:1fr}.category-list{flex-direction:column;align-items:center}}
+
+/* Utility Classes */
+.text-center{text-align:center}.mb-1{margin-bottom:1rem}.mb-2{margin-bottom:2rem}.mt-1{margin-top:1rem}.mt-2{margin-top:2rem}
