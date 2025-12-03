@@ -94,7 +94,17 @@ get_header();
                     <div class="product-card">
                         <div class="product-image">
                             <?php if (has_post_thumbnail()) : ?>
-                                <?php the_post_thumbnail('product-thumb'); ?>
+                                <?php 
+                                $image_id = get_post_thumbnail_id();
+                                $image_url = wp_get_attachment_image_url($image_id, 'product-thumb');
+                                $image_url_2x = wp_get_attachment_image_url($image_id, 'product-thumb-2x');
+                                ?>
+                                <img src="<?php echo esc_url($image_url); ?>" 
+                                     srcset="<?php echo esc_url($image_url); ?> 1x, <?php echo esc_url($image_url_2x); ?> 2x"
+                                     alt="<?php the_title_attribute(); ?>" 
+                                     loading="lazy" 
+                                     width="300" 
+                                     height="300">
                             <?php else : ?>
                                 <img src="<?php echo get_template_directory_uri(); ?>/assets/images/placeholder.svg" alt="<?php the_title(); ?>" loading="lazy" width="300" height="250">
                             <?php endif; ?>

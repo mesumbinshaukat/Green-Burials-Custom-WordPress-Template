@@ -23,25 +23,45 @@ function green_burials_setup() {
     // Set image sizes
     set_post_thumbnail_size(400, 400, true);
     add_image_size('product-thumb', 300, 300, true);
+    add_image_size('product-thumb-2x', 600, 600, true);
     add_image_size('hero-image', 500, 400, true);
+    add_image_size('hero-image-2x', 1000, 800, true);
+    
+    // Enable WebP support
+    add_filter('upload_mimes', 'green_burials_add_webp_mime');
+    function green_burials_add_webp_mime($mimes) {
+        $mimes['webp'] = 'image/webp';
+        return $mimes;
+    }
 }
 add_action('after_setup_theme', 'green_burials_setup');
 
 // Enqueue optimized styles and scripts
 function green_burials_scripts() {
+    // Google Fonts - Playfair Display and Roboto with preload
+    wp_enqueue_style('playfair-font', 'https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Roboto:wght@400;600;700&display=swap', array(), null);
+    
     // Main stylesheet - minified inline
-    wp_enqueue_style('green-burials-style', get_stylesheet_uri(), array(), '1.0');
+    wp_enqueue_style('green-burials-style', get_stylesheet_uri(), array('playfair-font'), '1.1');
     
     // Main script - deferred
-    wp_enqueue_script('green-burials-script', get_template_directory_uri() . '/js/script.js', array(), '1.0', true);
+    wp_enqueue_script('green-burials-script', get_template_directory_uri() . '/js/script.js', array(), '1.1', true);
     
     // Remove unnecessary WordPress styles/scripts
     wp_dequeue_style('wp-block-library');
     wp_dequeue_style('wp-block-library-theme');
     wp_dequeue_style('wc-block-style');
     wp_dequeue_style('global-styles');
+    wp_deregister_style('global-styles');
 }
 add_action('wp_enqueue_scripts', 'green_burials_scripts', 100);
+
+// Preload Google Fonts for performance
+function green_burials_preload_fonts() {
+    echo '<link rel="preconnect" href="https://fonts.googleapis.com">';
+    echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>';
+}
+add_action('wp_head', 'green_burials_preload_fonts', 1);
 
 // Remove jQuery if not needed
 function green_burials_remove_jquery() {
@@ -123,38 +143,7 @@ function green_burials_get_products($args = array()) {
     return new WP_Query($args);
 }
 
-// Get featured products
-function green_burials_get_featured_products($limit = 4) {
-    return green_burials_get_products(array(
-        'posts_per_page' => $limit,
-        'tax_query' => array(
-            array(
-                'taxonomy' => 'product_visibility',
-                'field' => 'name',
-                'terms' => 'featured',
-            ),
-        ),
-    ));
-}
-
-// Get best sellers
-function green_burials_get_best_sellers($limit = 4) {
-    return green_burials_get_products(array(
-        'posts_per_page' => $limit,
-        'meta_key' => 'total_sales',
-        'orderby' => 'meta_value_num',
-        'order' => 'DESC',
-    ));
-}
-
-// Get latest products
-function green_burials_get_latest_products($limit = 4) {
-    return green_burials_get_products(array(
-        'posts_per_page' => $limit,
-        'orderby' => 'date',
-        'order' => 'DESC',
-    ));
-}
+// Old product functions removed - now using cached versions below (lines 413-441)
 
 // Get products by category
 function green_burials_get_products_by_category($category_slug, $limit = 4) {
@@ -264,3 +253,201 @@ function green_burials_excerpt_more($more) {
     return '...';
 }
 add_filter('excerpt_more', 'green_burials_excerpt_more');
+
+// Image Compression Function using GD Library
+function green_burials_compress_image($file_path, $quality = 80, $max_width = 800) {
+    // Check if GD is available
+    if (!extension_loaded('gd')) {
+        return $file_path; // Return original if GD not available
+    }
+    
+    // Get image info
+    $image_info = @getimagesize($file_path);
+    if (!$image_info) {
+        return $file_path;
+    }
+    
+    list($width, $height, $type) = $image_info;
+    
+    // Skip if already small enough
+    if ($width <= $max_width && filesize($file_path) < 50000) {
+        return $file_path;
+    }
+    
+    // Create optimized folder if it doesn't exist
+    $upload_dir = wp_upload_dir();
+    $optimized_dir = $upload_dir['basedir'] . '/optimized';
+    if (!file_exists($optimized_dir)) {
+        wp_mkdir_p($optimized_dir);
+    }
+    
+    // Generate optimized filename
+    $filename = basename($file_path);
+    $optimized_path = $optimized_dir . '/' . pathinfo($filename, PATHINFO_FILENAME) . '.webp';
+    
+    // Check if already optimized
+    if (file_exists($optimized_path) && filemtime($optimized_path) >= filemtime($file_path)) {
+        return $optimized_path;
+    }
+    
+    // Load image based on type
+    $image = null;
+    switch ($type) {
+        case IMAGETYPE_JPEG:
+            $image = @imagecreatefromjpeg($file_path);
+            break;
+        case IMAGETYPE_PNG:
+            $image = @imagecreatefrompng($file_path);
+            break;
+        case IMAGETYPE_GIF:
+            $image = @imagecreatefromgif($file_path);
+            break;
+        case IMAGETYPE_WEBP:
+            return $file_path; // Already WebP
+        default:
+            return $file_path;
+    }
+    
+    if (!$image) {
+        return $file_path;
+    }
+    
+    // Calculate new dimensions
+    if ($width > $max_width) {
+        $new_width = $max_width;
+        $new_height = intval($height * ($max_width / $width));
+    } else {
+        $new_width = $width;
+        $new_height = $height;
+    }
+    
+    // Create resized image
+    $resized = imagecreatetruecolor($new_width, $new_height);
+    
+    // Preserve transparency for PNG/GIF
+    if ($type == IMAGETYPE_PNG || $type == IMAGETYPE_GIF) {
+        imagealphablending($resized, false);
+        imagesavealpha($resized, true);
+        $transparent = imagecolorallocatealpha($resized, 255, 255, 255, 127);
+        imagefilledrectangle($resized, 0, 0, $new_width, $new_height, $transparent);
+    }
+    
+    imagecopyresampled($resized, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+    
+    // Save as WebP if supported
+    if (function_exists('imagewebp')) {
+        imagewebp($resized, $optimized_path, $quality);
+    } else {
+        // Fallback to JPEG
+        $optimized_path = str_replace('.webp', '.jpg', $optimized_path);
+        imagejpeg($resized, $optimized_path, $quality);
+    }
+    
+    imagedestroy($image);
+    imagedestroy($resized);
+    
+    return $optimized_path;
+}
+
+// Enhanced WooCommerce product queries with caching
+function green_burials_get_products_cached($args = array(), $cache_key = 'products') {
+    $transient_key = 'gb_' . $cache_key . '_' . md5(serialize($args));
+    $cached = get_transient($transient_key);
+    
+    if ($cached !== false) {
+        return $cached;
+    }
+    
+    $defaults = array(
+        'post_type' => 'product',
+        'posts_per_page' => 4,
+        'post_status' => 'publish',
+        'orderby' => 'date',
+        'order' => 'DESC',
+        'no_found_rows' => true,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
+    );
+    
+    $args = wp_parse_args($args, $defaults);
+    $query = new WP_Query($args);
+    
+    // Cache for 1 hour
+    set_transient($transient_key, $query, HOUR_IN_SECONDS);
+    
+    return $query;
+}
+
+// Override existing product functions to use caching
+function green_burials_get_featured_products($limit = 4) {
+    return green_burials_get_products_cached(array(
+        'posts_per_page' => $limit,
+        'tax_query' => array(
+            array(
+                'taxonomy' => 'product_visibility',
+                'field' => 'name',
+                'terms' => 'featured',
+            ),
+        ),
+    ), 'featured');
+}
+
+function green_burials_get_best_sellers($limit = 4) {
+    return green_burials_get_products_cached(array(
+        'posts_per_page' => $limit,
+        'meta_key' => 'total_sales',
+        'orderby' => 'meta_value_num',
+        'order' => 'DESC',
+    ), 'bestsellers');
+}
+
+function green_burials_get_latest_products($limit = 4) {
+    return green_burials_get_products_cached(array(
+        'posts_per_page' => $limit,
+        'orderby' => 'date',
+        'order' => 'DESC',
+    ), 'latest');
+}
+
+// Disable WooCommerce cart fragments on homepage
+add_action('wp', function() {
+    if (is_front_page()) {
+        wp_dequeue_script('wc-cart-fragments');
+    }
+});
+
+// Remove query strings from static resources
+function green_burials_remove_ver($src) {
+    if (strpos($src, 'ver=')) {
+        $src = remove_query_arg('ver', $src);
+    }
+    return $src;
+}
+add_filter('style_loader_src', 'green_burials_remove_ver', 9999);
+add_filter('script_loader_src', 'green_burials_remove_ver', 9999);
+
+// Inline critical CSS for above-the-fold content
+function green_burials_inline_critical_css() {
+    if (!is_front_page()) return;
+    ?>
+    <style id="critical-css">
+    :root{--primary-green:#73884D;--dark-green:#5A7A1F;--accent-gold:#C4B768}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Roboto',sans-serif;line-height:1.6;color:#333;background:#fff}
+    .site-header{background:var(--primary-green);color:#fff;position:sticky;top:0;z-index:1000}
+    .hero-section{padding:3.75rem 0}
+    .hero-text h1{font-size:4.5rem;color:var(--primary-green);font-family:'Playfair Display',serif;text-transform:uppercase}
+    .container{max-width:1200px;margin:0 auto;padding:0 1.5rem}
+    </style>
+    <?php
+}
+add_action('wp_head', 'green_burials_inline_critical_css', 2);
+
+// Performance monitoring (optional - for testing)
+function green_burials_performance_monitor() {
+    if (!is_front_page() || !current_user_can('manage_options')) return;
+    
+    $load_time = timer_stop(0, 3);
+    echo '<!-- Page generated in ' . $load_time . ' seconds -->';
+}
+add_action('wp_footer', 'green_burials_performance_monitor', 999);
