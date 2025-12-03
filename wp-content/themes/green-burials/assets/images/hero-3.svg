@@ -1,0 +1,7 @@
+<svg width="250" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="250" height="200" fill="#6B8E23"/>
+  <path d="M 75 150 Q 75 80, 125 80 Q 175 80, 175 150 L 175 170 L 75 170 Z" fill="#5A7A1F" opacity="0.6"/>
+  <text x="50%" y="90%" font-family="Arial, sans-serif" font-size="14" fill="#ffffff" text-anchor="middle" font-weight="bold">
+    Burial Basket
+  </text>
+</svg>
